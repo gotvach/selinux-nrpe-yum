@@ -1,0 +1,54 @@
+# Date: 5/Jun/2013
+# Author: Grant Hammond <grant.hammond@adfonic.com>
+#
+# Changelog:
+#  GH 10/6/13 v0.3: connect_network boolean for yum cache updates
+#  GH  5/6/13 v0.2: Use nagios_system_plugin_t context rather than rpm_exec_t
+#  GH  5/6/13 v0.1: Initial revision
+#
+
+policy_module(nrpe_yum, 0.2)
+
+## <desc>
+## <p>
+##	Determine whether NRPE is allowed to execute yum/rpm to read the RPM
+##	database.
+## </p>
+## </desc>
+gen_tunable(nrpe_use_yum, true)
+
+## <desc>
+## <p>
+##	Determine whether NRPE/yum is allowed to connect to the network
+##	database.
+## </p>
+## </desc>
+gen_tunable(nrpe_connect_network, false)
+
+require {
+    type nagios_system_plugin_t;
+    class process setsched;
+    class udp_socket { ioctl read write create getattr connect shutdown };
+    class tcp_socket { create read write getattr getopt connect shutdown };
+    class netlink_route_socket { nlmsg_read bind create getattr shutdown };
+}
+
+#============= nagios_system_plugin_t ==============
+logging_send_syslog_msg(nagios_system_plugin_t)
+
+tunable_policy(`nrpe_use_yum',`
+    files_list_boot(nagios_system_plugin_t)
+    files_manage_generic_tmp_files(nagios_system_plugin_t)
+    rpm_exec(nagios_system_plugin_t)
+    rpm_read_db(nagios_system_plugin_t)
+    sysnet_read_config(nagios_system_plugin_t)
+    allow nagios_system_plugin_t self:process { setsched };
+')
+
+tunable_policy(`nrpe_connect_network',`
+    corenet_tcp_connect_http_port(nagios_system_plugin_t)
+    allow nagios_system_plugin_t self:tcp_socket { create read write getattr getopt connect shutdown } ;
+    allow nagios_system_plugin_t self:netlink_route_socket { nlmsg_read bind create getattr shutdown } ;
+    allow nagios_system_plugin_t self:udp_socket { ioctl read write create getattr connect shutdown } ;
+')
+

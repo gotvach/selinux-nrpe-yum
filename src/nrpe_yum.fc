@@ -1,0 +1,1 @@
+/usr/lib64/nagios/plugins/check_yum	--	gen_context(system_u:object_r:nagios_system_plugin_exec_t,s0)
