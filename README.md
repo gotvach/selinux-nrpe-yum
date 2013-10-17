@@ -12,19 +12,25 @@ contains files appropriate for building SELinux modules.
 
 Build just the module:
 
+```
  make pp
+```
 
 Build the module and RPMs:
 
+```
  make rpm
+```
 
 SELinux Booleans
 ----------------
 
 Adds two new booleans:
 
+```
  nrpe_use_yum --> on            # allow YUM to be accessible via NRPE.
  nrpe_connect_network --> off   # allow YUM to pull new caches via network.
+```
 
 The first allows read-only access to the RPM database and directories, and
 /var/tmp.  The second permits the updating of YUM caches using HTTP which
