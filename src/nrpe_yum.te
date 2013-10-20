@@ -19,8 +19,7 @@ gen_tunable(nrpe_use_yum, true)
 
 ## <desc>
 ## <p>
-##	Determine whether NRPE/yum is allowed to connect to the network
-##	database.
+##	Determine whether NRPE/yum is allowed to connect to the network.
 ## </p>
 ## </desc>
 gen_tunable(nrpe_connect_network, false)
