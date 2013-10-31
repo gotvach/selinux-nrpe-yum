@@ -7,7 +7,7 @@
 #  GH  5/6/13 v0.1: Initial revision
 #
 
-policy_module(nrpe_yum, 0.2)
+policy_module(nrpe_yum, 0.3)
 
 ## <desc>
 ## <p>
@@ -26,7 +26,7 @@ gen_tunable(nrpe_connect_network, false)
 
 require {
     type nagios_system_plugin_t;
-    class process setsched;
+    class process { signull setsched };
     class udp_socket { ioctl read write create getattr connect shutdown };
     class tcp_socket { create read write getattr getopt connect shutdown };
     class netlink_route_socket { nlmsg_read bind create getattr shutdown };
@@ -41,7 +41,7 @@ tunable_policy(`nrpe_use_yum',`
     rpm_exec(nagios_system_plugin_t)
     rpm_read_db(nagios_system_plugin_t)
     sysnet_read_config(nagios_system_plugin_t)
-    allow nagios_system_plugin_t self:process { setsched };
+    allow nagios_system_plugin_t self:process { signull setsched };
 ')
 
 tunable_policy(`nrpe_connect_network',`
