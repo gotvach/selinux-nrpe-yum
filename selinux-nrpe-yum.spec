@@ -6,7 +6,7 @@
 
 Name:           selinux-nrpe-%{modid}
 Version:        0.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        SELinux Policy NRPE for check_yum/check_updates
 
 Group:          Systems Environment/Policy
